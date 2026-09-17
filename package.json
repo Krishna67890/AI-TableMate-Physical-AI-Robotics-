@@ -1,0 +1,15 @@
+{
+  "name": "ai-tablemate-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI TableMate — Physical AI + Bimanual VLA Robotics Platform for Intel Hackathon Track",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "start": "npm --prefix frontend run dev",
+    "preview": "npm --prefix frontend run preview"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}

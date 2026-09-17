@@ -1,0 +1,172 @@
+<mujoco model="so101_bimanual_table">
+  <compiler angle="radian" coordinate="local" meshdir="meshes/"/>
+  <option timestep="0.002" gravity="0 0 -9.81" iterations="50" solver="Newton"/>
+
+  <visual>
+    <headlight ambient="0.3 0.3 0.35" diffuse="0.8 0.8 0.8" specular="0.2 0.2 0.2"/>
+    <rgba haze="0.05 0.08 0.12 1"/>
+  </visual>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.04 0.06 0.09" rgb2="0.08 0.12 0.16" width="512" height="512"/>
+    <texture name="grid" type="2d" builtin="checker" rgb1="0.1 0.12 0.16" rgb2="0.14 0.17 0.22" width="512" height="512"/>
+    <material name="grid_mat" texture="grid" texrepeat="20 20" reflectance="0.1"/>
+    <material name="table_mat" rgba="0.12 0.15 0.2 1" roughness="0.4" reflectance="0.2"/>
+    <material name="arm_mat" rgba="0.18 0.22 0.3 1" roughness="0.3" metalness="0.8"/>
+    <material name="joint_mat" rgba="0.0 0.94 1.0 1" emission="0.4"/>
+    <material name="plate_mat" rgba="0.92 0.94 0.98 1" roughness="0.2"/>
+    <material name="cup_mat" rgba="0.0 0.85 0.95 1" roughness="0.3"/>
+    <material name="cutlery_mat" rgba="0.8 0.82 0.85 1" roughness="0.1" metalness="0.9"/>
+  </asset>
+
+  <worldbody>
+    <!-- Ground plane -->
+    <geom name="floor" type="plane" size="5 5 0.1" material="grid_mat"/>
+
+    <!-- Table Base -->
+    <body name="table" pos="0 0.1 0.4">
+      <geom name="tabletop" type="box" size="0.65 0.45 0.02" material="table_mat"/>
+      <geom name="leg1" type="cylinder" size="0.025 0.2" pos="0.6 0.4 -0.2" material="arm_mat"/>
+      <geom name="leg2" type="cylinder" size="0.025 0.2" pos="-0.6 0.4 -0.2" material="arm_mat"/>
+      <geom name="leg3" type="cylinder" size="0.025 0.2" pos="0.6 -0.4 -0.2" material="arm_mat"/>
+      <geom name="leg4" type="cylinder" size="0.025 0.2" pos="-0.6 -0.4 -0.2" material="arm_mat"/>
+    </body>
+
+    <!-- Overhead RGB-D Camera -->
+    <camera name="overhead_cam" pos="0 0.1 1.4" euler="0 0 0" mode="fixed"/>
+    <camera name="front_cam" pos="0 -0.8 0.9" euler="0.6 0 0" mode="fixed"/>
+
+    <!-- LEFT SO-101 ARM -->
+    <body name="left_arm_base" pos="-0.4 -0.15 0.42">
+      <geom name="left_base_geom" type="cylinder" size="0.05 0.03" material="arm_mat"/>
+      <body name="left_link1" pos="0 0 0.04">
+        <joint name="left_joint1" type="hinge" axis="0 0 1" range="-2.8 2.8"/>
+        <geom name="left_link1_geom" type="cylinder" size="0.035 0.04" material="arm_mat"/>
+        <body name="left_link2" pos="0 0 0.06">
+          <joint name="left_joint2" type="hinge" axis="0 1 0" range="-1.8 1.8"/>
+          <geom name="left_link2_geom" type="capsule" fromto="0 0 0 0 0 0.14" size="0.03" material="arm_mat"/>
+          <body name="left_link3" pos="0 0 0.14">
+            <joint name="left_joint3" type="hinge" axis="0 1 0" range="-2.2 2.2"/>
+            <geom name="left_link3_geom" type="capsule" fromto="0 0 0 0 0 0.13" size="0.025" material="arm_mat"/>
+            <body name="left_link4" pos="0 0 0.13">
+              <joint name="left_joint4" type="hinge" axis="0 1 0" range="-2.0 2.0"/>
+              <geom name="left_link4_geom" type="cylinder" size="0.02 0.025" material="arm_mat"/>
+              <body name="left_link5" pos="0 0 0.04">
+                <joint name="left_joint5" type="hinge" axis="0 0 1" range="-3.14 3.14"/>
+                <geom name="left_link5_geom" type="cylinder" size="0.018 0.02" material="arm_mat"/>
+                <!-- End Effector Gripper -->
+                <body name="left_ee" pos="0 0 0.03">
+                  <geom name="left_ee_palm" type="box" size="0.025 0.015 0.01" material="joint_mat"/>
+                  <body name="left_gripper_left" pos="-0.015 0 0.025">
+                    <joint name="left_gripper_joint" type="slide" axis="1 0 0" range="-0.02 0.02"/>
+                    <geom name="left_finger1" type="box" size="0.005 0.008 0.02" material="arm_mat"/>
+                  </body>
+                  <body name="left_gripper_right" pos="0.015 0 0.025">
+                    <geom name="left_finger2" type="box" size="0.005 0.008 0.02" material="arm_mat"/>
+                  </body>
+                  <site name="left_tool_point" pos="0 0 0.045" size="0.005"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+
+    <!-- RIGHT SO-101 ARM -->
+    <body name="right_arm_base" pos="0.4 -0.15 0.42">
+      <geom name="right_base_geom" type="cylinder" size="0.05 0.03" material="arm_mat"/>
+      <body name="right_link1" pos="0 0 0.04">
+        <joint name="right_joint1" type="hinge" axis="0 0 1" range="-2.8 2.8"/>
+        <geom name="right_link1_geom" type="cylinder" size="0.035 0.04" material="arm_mat"/>
+        <body name="right_link2" pos="0 0 0.06">
+          <joint name="right_joint2" type="hinge" axis="0 1 0" range="-1.8 1.8"/>
+          <geom name="right_link2_geom" type="capsule" fromto="0 0 0 0 0 0.14" size="0.03" material="arm_mat"/>
+          <body name="right_link3" pos="0 0 0.14">
+            <joint name="right_joint3" type="hinge" axis="0 1 0" range="-2.2 2.2"/>
+            <geom name="right_link3_geom" type="capsule" fromto="0 0 0 0 0 0.13" size="0.025" material="arm_mat"/>
+            <body name="right_link4" pos="0 0 0.13">
+              <joint name="right_joint4" type="hinge" axis="0 1 0" range="-2.0 2.0"/>
+              <geom name="right_link4_geom" type="cylinder" size="0.02 0.025" material="arm_mat"/>
+              <body name="right_link5" pos="0 0 0.04">
+                <joint name="right_joint5" type="hinge" axis="0 0 1" range="-3.14 3.14"/>
+                <geom name="right_link5_geom" type="cylinder" size="0.018 0.02" material="arm_mat"/>
+                <!-- End Effector Gripper -->
+                <body name="right_ee" pos="0 0 0.03">
+                  <geom name="right_ee_palm" type="box" size="0.025 0.015 0.01" material="joint_mat"/>
+                  <body name="right_gripper_left" pos="-0.015 0 0.025">
+                    <joint name="right_gripper_joint" type="slide" axis="1 0 0" range="-0.02 0.02"/>
+                    <geom name="right_finger1" type="box" size="0.005 0.008 0.02" material="arm_mat"/>
+                  </body>
+                  <body name="right_gripper_right" pos="0.015 0 0.025">
+                    <geom name="right_finger2" type="box" size="0.005 0.008 0.02" material="arm_mat"/>
+                  </body>
+                  <site name="right_tool_point" pos="0 0 0.045" size="0.005"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+
+    <!-- TABLETOP MANIPULATION OBJECTS -->
+    <body name="plate_1" pos="-0.2 0.15 0.43">
+      <freejoint/>
+      <geom name="plate1_geom" type="cylinder" size="0.09 0.01" material="plate_mat" mass="0.2"/>
+    </body>
+
+    <body name="plate_2" pos="0.2 0.15 0.43">
+      <freejoint/>
+      <geom name="plate2_geom" type="cylinder" size="0.09 0.01" material="plate_mat" mass="0.2"/>
+    </body>
+
+    <body name="mug_1" pos="-0.28 0.25 0.45">
+      <freejoint/>
+      <geom name="mug1_geom" type="cylinder" size="0.035 0.045" material="cup_mat" mass="0.15"/>
+    </body>
+
+    <body name="mug_2" pos="0.28 0.25 0.45">
+      <freejoint/>
+      <geom name="mug2_geom" type="cylinder" size="0.035 0.045" material="cup_mat" mass="0.15"/>
+    </body>
+
+    <body name="fork_1" pos="-0.31 0.15 0.425">
+      <freejoint/>
+      <geom name="fork1_geom" type="box" size="0.012 0.065 0.004" material="cutlery_mat" mass="0.05"/>
+    </body>
+
+    <body name="spoon_1" pos="-0.09 0.15 0.425">
+      <freejoint/>
+      <geom name="spoon1_geom" type="box" size="0.014 0.065 0.004" material="cutlery_mat" mass="0.05"/>
+    </body>
+
+    <body name="fork_2" pos="0.09 0.15 0.425">
+      <freejoint/>
+      <geom name="fork2_geom" type="box" size="0.012 0.065 0.004" material="cutlery_mat" mass="0.05"/>
+    </body>
+
+    <body name="spoon_2" pos="0.31 0.15 0.425">
+      <freejoint/>
+      <geom name="spoon2_geom" type="box" size="0.014 0.065 0.004" material="cutlery_mat" mass="0.05"/>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <!-- Left Arm Actuators -->
+    <motor name="left_motor1" joint="left_joint1" gear="1" ctrlrange="-10 10"/>
+    <motor name="left_motor2" joint="left_joint2" gear="1" ctrlrange="-15 15"/>
+    <motor name="left_motor3" joint="left_joint3" gear="1" ctrlrange="-12 12"/>
+    <motor name="left_motor4" joint="left_joint4" gear="1" ctrlrange="-8 8"/>
+    <motor name="left_motor5" joint="left_joint5" gear="1" ctrlrange="-5 5"/>
+    <position name="left_gripper_act" joint="left_gripper_joint" kp="50" ctrlrange="-0.02 0.02"/>
+
+    <!-- Right Arm Actuators -->
+    <motor name="right_motor1" joint="right_joint1" gear="1" ctrlrange="-10 10"/>
+    <motor name="right_motor2" joint="right_joint2" gear="1" ctrlrange="-15 15"/>
+    <motor name="right_motor3" joint="right_joint3" gear="1" ctrlrange="-12 12"/>
+    <motor name="right_motor4" joint="right_joint4" gear="1" ctrlrange="-8 8"/>
+    <motor name="right_motor5" joint="right_joint5" gear="1" ctrlrange="-5 5"/>
+    <position name="right_gripper_act" joint="right_gripper_joint" kp="50" ctrlrange="-0.02 0.02"/>
+  </actuator>
+</mujoco>

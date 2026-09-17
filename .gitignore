@@ -1,0 +1,23 @@
+# Node / Vite
+node_modules/
+dist/
+.npm-cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.pip-cache/
+
+# Environment Variables
+.env
+.env.local
+
+# IDE / OS
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
+.DS_Store
