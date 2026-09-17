@@ -177,6 +177,3 @@ The application never crashes if optional hardware or external packages are miss
 * **Roles:** Full-Stack Developer · AI Developer · Android Developer · Game Developer
 * **Profile Image:** `developer.jpg`
 * **Project:** AI TableMate Physical AI & Robotics Platform for the Intel Online Bimanual VLA Manipulation Track (AI Infra Summit Hackathon).
-#   A I - T a b l e M a t e - P h y s i c a l - A I - R o b o t i c s -  
- #   A I - T a b l e M a t e - P h y s i c a l - A I - R o b o t i c s -  
- 
